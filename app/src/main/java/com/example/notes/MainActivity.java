@@ -24,26 +24,35 @@ import java.util.ArrayList;
 
 
 
-public class MainActivity extends AppCompatActivity {
+ public class MainActivity extends AppCompatActivity {
     ArrayList<String> n;
     ArrayAdapter arrayAdapter;
     SharedPreferences s;
     ListView lv;
     EditText ed;
+    public static ArrayList<String> editContent;
 
-    private void save()
+    private void save()     //save data
     {
         try {
-            s.edit().putString("friends",ObjectSerializer.serialize(n)).apply();
+            s.edit().putString("name",ObjectSerializer.serialize(n)).apply();
 
-            Log.i("friends",ObjectSerializer.serialize(n));
+            Log.i("name",ObjectSerializer.serialize(n));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            s.edit().putString("content",ObjectSerializer.serialize(editContent)).apply();
+
+            Log.i("content",ObjectSerializer.serialize(editContent));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void Note(final int operation)
+    private void Note(final int operation)     //add or rename note
     {
         ed=(EditText)findViewById(R.id.editText2);
         lv.animate().alpha(0);
@@ -59,8 +68,10 @@ public class MainActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     String g = ed.getText().toString();
                     ed.setText("");
-                    if(operation==-1)
-                        n.add(g);                         //add new note
+                    if(operation==-1){
+                        n.add(g);
+                        editContent.add("");
+                    }                     //add new note
                     else{
                         n.remove(operation);
                         n.add(operation,g);       }        //rename existing note
@@ -79,51 +90,73 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi=getMenuInflater();
         mi.inflate(R.menu.main_menu,menu);
-         return super.onCreateOptionsMenu(menu);
+        return super.onCreateOptionsMenu(menu);
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-         super.onOptionsItemSelected(item);
-         switch(item.getItemId()) {
-             case R.id.add:
-                 Note(-1);
-         }
-         return true;
+        super.onOptionsItemSelected(item);
+        switch(item.getItemId()) {
+            case R.id.add:
+                Note(-1);
+        }
+        return true;
     }
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-          s=this.getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+        s=this.getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-         n = new ArrayList<>();
-
-        try {
-            n = (ArrayList<String>) ObjectSerializer.deserialize(s.getString("friends", ObjectSerializer.serialize(new ArrayList<String>())));
+        n = new ArrayList<>();
+        try {       //Retrieve saved name of notes
+            n = (ArrayList<String>) ObjectSerializer.deserialize(s.getString("name", ObjectSerializer.serialize(new ArrayList<String>())));
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        Intent i=getIntent();
+        int t=i.getIntExtra("changed",-1);
+        Log.i("uggggggghhh"," "+t);
+        if(t==-1)
+        {
+        try {    //retrieve saved content of notes
+            editContent = (ArrayList<String>) ObjectSerializer.deserialize(s.getString("content", ObjectSerializer.serialize(new ArrayList<String>())));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }}
+        else{
+            editContent=add.content;
+
+            Log.i("mainnnnnnn",editContent.get(t));
+            save();}
+
+
+        //Display names of notes
         lv=(ListView) findViewById(R.id.lv);
         arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,n);
         lv.setAdapter(arrayAdapter);
 
 
-
+        //open content when name is clicked
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-                 save();
+                save();
                 Intent intent=new Intent(MainActivity.this,add.class);
                 intent.putExtra("noteId",i);
                 startActivity(intent);
             }
         });
 
+
+
+        //open rename or delete option menu when name is long clicked
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -142,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 n.remove(position);
+                                editContent.remove(position);
                                 arrayAdapter.notifyDataSetChanged();
                                 save();
                             }

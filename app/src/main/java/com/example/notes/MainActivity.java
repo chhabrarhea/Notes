@@ -56,7 +56,7 @@ import java.util.ArrayList;
     {
         ed=(EditText)findViewById(R.id.editText2);
         lv.animate().alpha(0);
-        ed.animate().alpha(1);
+        ed.animate().alpha(1).translationY(-1000);
      
      //Pick user input from edit text view only when enter key is pressed
         ed.setOnKeyListener(new View.OnKeyListener() {
@@ -65,7 +65,7 @@ import java.util.ArrayList;
 
                 if(keyCode==event.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                     lv.animate().alpha(1);
-                    ed.animate().alpha(0);
+                    ed.animate().alpha(0).translationY(1000);
                  
                  
                  //Hide keyboard when enter key is pressed

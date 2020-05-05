@@ -22,22 +22,20 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <EditText
-        android:id="@+id/editText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="169dp"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="31dp"
-        android:alpha="0"
+          android:id="@+id/editText"
+        android:layout_width="347dp"
+        android:layout_height="575dp"
+        android:layout_marginBottom="29dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="38dp"
+        android:background="@android:color/holo_blue_dark"
+        android:backgroundTint="#5EBFD3"
+        android:inputType="textMultiLine"
         android:ems="10"
-        android:hint="Enter Name"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/lv"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

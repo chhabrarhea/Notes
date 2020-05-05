@@ -57,6 +57,8 @@ import java.util.ArrayList;
         ed=(EditText)findViewById(R.id.editText2);
         lv.animate().alpha(0);
         ed.animate().alpha(1);
+     
+     //Pick user input from edit text view only when enter key is pressed
         ed.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -64,14 +66,21 @@ import java.util.ArrayList;
                 if(keyCode==event.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                     lv.animate().alpha(1);
                     ed.animate().alpha(0);
+                 
+                 
+                 //Hide keyboard when enter key is pressed
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                 
                     String g = ed.getText().toString();
                     ed.setText("");
+                 
+                 
+                 
                     if(operation==-1){
                         n.add(g);
-                        editContent.add("");
-                    }                     //add new note
+                        editContent.add("");             //add new note
+                    }                        
                     else{
                         n.remove(operation);
                         n.add(operation,g);       }        //rename existing note
@@ -121,7 +130,7 @@ import java.util.ArrayList;
 
         Intent i=getIntent();
         int t=i.getIntExtra("changed",-1);
-        Log.i("uggggggghhh"," "+t);
+         
         if(t==-1)
         {
         try {    //retrieve saved content of notes
@@ -130,10 +139,9 @@ import java.util.ArrayList;
             e.printStackTrace();
         }}
         else{
-            editContent=add.content;
-
-            Log.i("mainnnnnnn",editContent.get(t));
-            save();}
+            editContent=add.content;  //update content of notes
+             save();
+            }
 
 
         //Display names of notes
